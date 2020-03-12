@@ -1,7 +1,11 @@
-// This file is created by egg-ts-helper@1.25.6
+// This file is created by egg-ts-helper@1.25.7
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
+type AnyClass = new (...args: any[]) => any;
+type AnyFunc<T = any> = (...args: any[]) => T;
+type CanExportFunc = AnyFunc<Promise<any>> | AnyFunc<IterableIterator<any>>;
+type AutoInstanceType<T, U = T extends CanExportFunc ? T : T extends AnyFunc ? ReturnType<T> : T> = U extends AnyClass ? InstanceType<U> : U;
 import ExportContent from '../../../app/service/content';
 import ExportContentcampaign from '../../../app/service/contentcampaign';
 import ExportFeature from '../../../app/service/feature';
@@ -17,19 +21,19 @@ import ExportCampaignVoucher from '../../../app/service/campaign/voucher';
 
 declare module 'egg' {
   interface IService {
-    content: ExportContent;
-    contentcampaign: ExportContentcampaign;
-    feature: ExportFeature;
-    module: ExportModule;
-    permission: ExportPermission;
-    role: ExportRole;
-    staticfile: ExportStaticfile;
-    test: ExportTest;
-    user: ExportUser;
-    wxplatform: ExportWxplatform;
+    content: AutoInstanceType<typeof ExportContent>;
+    contentcampaign: AutoInstanceType<typeof ExportContentcampaign>;
+    feature: AutoInstanceType<typeof ExportFeature>;
+    module: AutoInstanceType<typeof ExportModule>;
+    permission: AutoInstanceType<typeof ExportPermission>;
+    role: AutoInstanceType<typeof ExportRole>;
+    staticfile: AutoInstanceType<typeof ExportStaticfile>;
+    test: AutoInstanceType<typeof ExportTest>;
+    user: AutoInstanceType<typeof ExportUser>;
+    wxplatform: AutoInstanceType<typeof ExportWxplatform>;
     campaign: {
-      merchantvoucher: ExportCampaignMerchantvoucher;
-      voucher: ExportCampaignVoucher;
+      merchantvoucher: AutoInstanceType<typeof ExportCampaignMerchantvoucher>;
+      voucher: AutoInstanceType<typeof ExportCampaignVoucher>;
     }
   }
 }

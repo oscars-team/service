@@ -3,7 +3,7 @@ export default (appInfo: EggAppInfo) => {
   const config = {} as PowerPartial<EggAppConfig>;
 
   config.siteInfo = {
-    domain: 'http://xymbtc.vicp.net'
+    domain: 'http://system.artibition.cn'
   };
   // override config from framework / plugin
   // use for cookie sign key, should change to your own and keep security
@@ -36,12 +36,24 @@ export default (appInfo: EggAppInfo) => {
   config.mongoose = {
     clients: {
       dbMembership: {
-        url: 'mongodb://artibition.cn/member',
-        options: { useUnifiedTopology: true }
+        url: 'mongodb://oscars_super:123@artibition.cn:22107/members',
+        options: {
+          useUnifiedTopology: true,
+          auth: {
+            user: 'oscars_super',
+            password: '123'
+          }
+        }
       },
       dbOscars: {
-        url: 'mongodb://artibition.cn/oscars',
-        options: { useUnifiedTopology: true }
+        url: 'mongodb://oscars_super:123@artibition.cn:22107/oscars',
+        options: {
+          useUnifiedTopology: true,
+          auth: {
+            user: 'oscars_super',
+            password: '123'
+          }
+        }
       }
     }
   }
@@ -80,7 +92,7 @@ export default (appInfo: EggAppInfo) => {
   }
 
   config.static = {
-    domain: 'http://127.0.0.1:7001'
+    domain: 'http://api.system.artibition.cn'
   }
 
   // add your special config in here

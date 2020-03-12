@@ -4,9 +4,26 @@ export default (app: Application) => {
   const { controller, router, jwt, io } = app;
   const iocontroller: any = io.controller;
 
+  app.get('/MP_verify_1Vkw76MOIcwKdGuL.txt', (ctx) => {
+    ctx.body = '1Vkw76MOIcwKdGuL'
+  });
+  app.get('/MP_verify_SaE8cnn2viPC5Owg.txt', (ctx) => {
+    ctx.body = 'SaE8cnn2viPC5Owg'
+  })
+
+  // News 天天订阅号
+  app.get('/MP_verify_E0aEekA5hcHTKNk9.txt', (ctx) => {
+    ctx.body = 'E0aEekA5hcHTKNk9'
+  })
+  // 我屋88 订阅号
+  app.get('/MP_verify_OG6HGA3r0bpxb0ut.txt', (ctx) => {
+    ctx.body = 'OG6HGA3r0bpxb0ut'
+  })
+
+
   router.get('/', jwt as any, controller.home.index);
 
-  router.post('/login', controller.home.login);
+  // router.post('/login', controller.home.login);
 
   router.post('/api/signin', controller.api.sign.signin);
   router.get('/api/currentUser', controller.api.sign.currentUser);
