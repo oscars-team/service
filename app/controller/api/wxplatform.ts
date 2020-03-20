@@ -8,15 +8,4 @@ export default class WechatPlatformController extends ApiController<IWechatPlatf
         super(ctx, ctx.service.wxplatform)
     }
 
-    async receiveBase() {
-        const { ctx } = this;
-        const { code, state } = ctx.query;
-        console.log(code, state);
-        this.ctx.success()
-    }
-
-    async receiveInfo() {
-        this.ctx.success()
-    }
-
 }

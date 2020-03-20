@@ -71,7 +71,7 @@ export default class ContentController extends Controller {
         const query = ContentQuery.extend(params);
 
         try {
-            await this.svc.update(id, query);
+            await this.svc.update(query, id);
             this.ctx.success();
         } catch (err) {
             err = (typeof err === 'string') ? err : JSON.stringify(err);

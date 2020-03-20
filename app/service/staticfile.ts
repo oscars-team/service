@@ -65,7 +65,7 @@ export default class StaticFileService extends Service {
         const writeStream = fs.createWriteStream(target);
         try {
             await writeStreamAsync(stream.pipe(writeStream));
-            file.path = `${this.config.static.domain}/public/upload/${dirname}/${filename}`
+            file.path = `${this.config.siteInfo.host}/public/upload/${dirname}/${filename}`
             return await StaticFile.create({
                 _id: objId,
                 ...file

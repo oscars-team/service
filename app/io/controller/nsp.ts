@@ -8,7 +8,6 @@ export default class NspController extends Controller {
     const message = ctx.args[0] || {};
     const socket = ctx.socket;
     const client = socket.id;
-
     try {
       const { target, payload } = message;
       if (!target) return;

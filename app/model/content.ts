@@ -1,18 +1,17 @@
 import { Application, MongooseSingleton } from 'egg';
 // import * as populate from 'mongoose-autopopulate'
 import { Document } from 'mongoose'
+import { IEntity } from '../component/schema';
 
-export interface IContent {
-    title: string,
+export interface IContentEntity extends IEntity {
     author: string,
     desc: string,
     content: string,
     thumb: string,
-    state: number
 }
 
 
-export interface IContentDocument extends IContent, Document {
+export interface IContentDocument extends IContentEntity, Document {
 }
 
 /**
@@ -33,7 +32,7 @@ export default (app: Application) => {
         // 具体内容
         content: { type: String, required: true },
         // 缩略图
-        thumb: String,
+        thumb: String, // cover
         // Content状态
         // - 1: 有效的 0: 无效的 -1: 已存档
         state: { type: Number, default: 1 }

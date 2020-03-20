@@ -5,7 +5,7 @@ import { Service, Context } from 'egg';
  * api: 
  *  /api/feature/
  */
-export default class Feature extends Service {
+export default class FeatureService extends Service {
     constructor(ctx: Context) {
         super(ctx);
     }

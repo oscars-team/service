@@ -2,7 +2,11 @@ import { Query } from '../component/query';
 import { Service, Context } from '../component/service';
 import { IWechatPlatformEntity, IWechatPlatformDocument } from '../model/wxplatform'
 import { Wechat, MongoStore } from 'wechat-jssdk'
+import { IWechatUserEntity } from '../model/wxuser';
 export class WechatPlatformQuery extends Query implements IWechatPlatformEntity {
+    qrcode: string;
+    businessCode: String;
+    id?: any;
     type: number;
     service: any;
     appId: string;
@@ -28,18 +32,34 @@ export class WechatPlatformQuery extends Query implements IWechatPlatformEntity 
     // }
 }
 
-export interface IWechatSignResult {
-    // 跳转地址, 如果有值说明需要跳转
-    redirectUrl: boolean
-}
 /**
  * 微信平台核心服务
  *  apis:
  *      /api/platforms/sign_{platformid}/
  */
 export default class WechatPlatformService extends Service<IWechatPlatformDocument, IWechatPlatformEntity> {
+
+    wxStore: MongoStore
     constructor(ctx: Context) {
         super(ctx, ctx.model.Wxplatform)
+        this.wxStore = new MongoStore({ dbAddress: 'mongodb://oscars_super:123@39.98.204.220:22107/oscars' });
+
+    }
+
+    async getAuthPlatform(platformid: string) {
+        try {
+            let platform: IWechatPlatformEntity = (await this.get(platformid)).toJSON({ virtuals: true });
+            let authPlatform: IWechatPlatformEntity = platform.type === 1 ? platform : platform.service ? platform.service : undefined;
+            if (!authPlatform || authPlatform.type === 0) throw `platform error: ${authPlatform ? authPlatform.title + ' is not service platform' : 'no service platform found'}`;
+            return authPlatform
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getWechatApi(platform: IWechatPlatformEntity) {
+        const { wxStore } = this;
+        return new Wechat({ appId: platform.appId, appSecret: platform.appSecret, wechatToken: platform.serverToken, wxStore });
     }
 
     // private getBrowser() {
@@ -49,25 +69,61 @@ export default class WechatPlatformService extends Service<IWechatPlatformDocume
     // }
 
 
-    async getSnsBaseUrl() {
-        const { ctx, logger } = this;
-        // 微信认证参数
-        const { params, request } = ctx;
-        const { platformid } = params;
-        const { sourceUrl } = request.body
-        // const { socketId, socketNsp } = request.body;
-        const dbUrl = this.config.mongoose?.clients ? this.config.mongoose.clients["dbOscars"].url : undefined
-        const store = dbUrl ? new MongoStore({ dbAddress: dbUrl }) : undefined;
+    async getSnsBaseUrl(authPlatform: IWechatPlatformEntity, { sourceUrl }) {
+        const { logger } = this;
         try {
-            let platform: IWechatPlatformEntity = (await this.get(platformid)).toJSON();
-            let authPlatform: IWechatPlatformEntity = platform.type === 1 ? platform : platform.service ? platform.service : undefined;
-            if (!authPlatform || authPlatform.type === 0) throw `platform error: ${authPlatform ? authPlatform.title + ' is not service platform' : 'no service platform found'}`;
-            const wechat = new Wechat({ appId: authPlatform.appId, appSecret: authPlatform.appSecret, wechatToken: authPlatform.serverToken, store });
-            return wechat.oauth.generateOAuthUrl(sourceUrl, 'snsapi_base', 'base');
+            return this.getWechatApi(authPlatform).oauth
+                .generateOAuthUrl(sourceUrl, 'snsapi_base', 'base');
         } catch (err) {
             logger.error(err);
+            throw err;
         }
+    }
 
+    async getBaseProfile(authPlatform: IWechatPlatformEntity, code: string) {
+        const { logger } = this;
+        try {
+            const api = this.getWechatApi(authPlatform);
+            return await api.oauth.getUserBaseInfo(code);
+        } catch (err) {
+            logger.error(err)
+            throw err;
+        }
+    }
+
+    async getSnsInfoUrl(authPlatform: IWechatPlatformEntity, { sourceUrl }) {
+        const { logger } = this;
+        try {
+            return this.getWechatApi(authPlatform).oauth
+                .generateOAuthUrl(sourceUrl, 'snsapi_userinfo', 'info');
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
+    async getInfoProfile(authPlatform: IWechatPlatformEntity, code: string) {
+        const { logger } = this;
+        try {
+            return this.getWechatApi(authPlatform).oauth
+                .getUserInfo(code);
+        } catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
+    async isUserSubscribedOn(user: IWechatUserEntity & { openid?: string }, platform: IWechatPlatformEntity) {
+        const { service } = this;
+
+        // 优先使用 unionid
+        if (user.unionid && (await service.wxsubscribe.find({ unionid: user.unionid, platform: platform.id }))?.subscribe)
+            return true;
+
+        if (user.openid && (await service.wxsubscribe.find({ openid: user.openid, platform: platform.id }))?.subscribe)
+            return true;
+
+        return false;
     }
 
 }

@@ -2,10 +2,6 @@ import { EggPlugin } from 'egg';
 
 const plugin: EggPlugin = {
   // static: true,
-  // nunjucks: {
-  //   enable: true,
-  //   package: 'egg-view-nunjucks',
-  // },
 
   /**
    * javascriptwebtoken
@@ -13,6 +9,11 @@ const plugin: EggPlugin = {
   jwt: {
     enable: true,
     package: 'egg-jwt'
+  },
+
+  cors: {
+    enable: true,
+    package: 'egg-cors'
   },
 
   mongoose: {
@@ -23,8 +24,12 @@ const plugin: EggPlugin = {
   io: {
     enable: true,
     package: 'egg-socket.io'
-  }
+  },
 
+  redis: {
+    enable: true,
+    package: 'egg-redis'
+  },
 };
 
 export default plugin;

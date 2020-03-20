@@ -1,0 +1,25 @@
+{
+  "wechatConfig": {
+    "appId": "wx4044f29c298cc212",
+    "store": "FileStore_D:\\Project\\Node\\app\\service\\wechat-info.json"
+  },
+  "globalToken": {
+    "count": 0
+  },
+  "urls": {},
+  "oauth": {
+    "o0qrK0apX_EInqm7xk0xnniWhheY": {
+      "access_token": "31_MvWzJGLxnFd_ElMK1QYYXiAQy-BXBqtj74zNegtusec1ay7FKgnS8qq_TEa48YW5nII_6GC19k2SEcfk96TcCw",
+      "expires_in": 7200,
+      "refresh_token": "31_sIGnsD3tYmzTLf5ASePiHZF4GbYh3vh8lC9Lvsx2wbGoDc4LRC58ThdGVLAn-N4-HJN3cKQEIijpjNFxKNov_Q",
+      "openid": "o0qrK0apX_EInqm7xk0xnniWhheY",
+      "scope": "snsapi_base",
+      "expirationTime": 1584702483549,
+      "key": "o0qrK0apX_EInqm7xk0xnniWhheY",
+      "createDate": "2020-03-20T09:09:03.549Z",
+      "modifyDate": "2020-03-20T09:09:03.549Z"
+    }
+  },
+  "card": {},
+  "mp": {}
+}

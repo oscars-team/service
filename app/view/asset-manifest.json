@@ -1,0 +1,23 @@
+{
+  "/appvendors.css": "/vendors.180b4dc5.chunk.css",
+  "/appvendors.js": "/vendors.971c07b0.async.js",
+  "/applayouts__BasicLayout.css": "/layouts__BasicLayout.e55cd52a.chunk.css",
+  "/applayouts__BasicLayout.js": "/layouts__BasicLayout.1a1b9789.async.js",
+  "/applayouts__SecurityLayout.js": "/layouts__SecurityLayout.bd086670.async.js",
+  "/applayouts__UserLayout.css": "/layouts__UserLayout.b59ea3a9.chunk.css",
+  "/applayouts__UserLayout.js": "/layouts__UserLayout.32de88de.async.js",
+  "/appp__404.js": "/p__404.e7487956.async.js",
+  "/appp__admin__login.css": "/p__admin__login.a8440899.chunk.css",
+  "/appp__admin__login.js": "/p__admin__login.3e552d1c.async.js",
+  "/appp__feature__post.css": "/p__feature__post.707148eb.chunk.css",
+  "/appp__feature__post.js": "/p__feature__post.fd43da10.async.js",
+  "/appumi.css": "/umi.34ff1071.css",
+  "/appumi.js": "/umi.91a27c21.js",
+  "/appfavicon.png": "/favicon.png",
+  "/apphome_bg.png": "/home_bg.png",
+  "/appicons/icon-128x128.png": "/icons/icon-128x128.png",
+  "/appicons/icon-192x192.png": "/icons/icon-192x192.png",
+  "/appicons/icon-512x512.png": "/icons/icon-512x512.png",
+  "/appindex.html": "/index.html",
+  "/apppro_icon.svg": "/pro_icon.svg"
+}

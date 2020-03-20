@@ -1,5 +1,6 @@
 import { Context } from 'egg'
 import { IPaging } from '../component/query';
+import { json2Xml } from '../component/xmlandjson';
 // import CustomLogger from '../component/customlogger';
 export default {
 
@@ -48,5 +49,20 @@ export default {
             errmsg
         }
         this.json();
+    },
+
+
+    replyText(this: Context, content: string | undefined, from: string[] | undefined, to: string[] | undefined) {
+        const rep = json2Xml({
+            xml: {
+                FromUserName: from,
+                ToUserName: to,
+                CreateTime: Date.now(),
+                MsgType: ['text'],
+                Content: [content]
+            }
+        })
+        this.res.end(content ? rep : null);
     }
+
 }

@@ -34,22 +34,6 @@ export default class ModuleController extends Controller {
         } catch (err) {
             this.ctx.error(err);
         }
-
-        // const { ctx, service } = this;
-        // const { request } = ctx;
-        // const {
-        //     body: model
-        // } = request;
-
-        // try {
-        //     await service.user.createUser(model);
-        //     ctx.success();
-        // } catch (err) {
-        //     // 索引重复
-        //     if (err.code === 11000) {
-        //         ctx.error(`duplicate loginname/displayname`)
-        //     }
-        // }
     }
 
     /**

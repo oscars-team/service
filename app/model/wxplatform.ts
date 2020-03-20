@@ -20,7 +20,12 @@ export interface IWechatPlatformEntity extends IEntity {
     // 公众号的原始ID
     originId: string
     // 平台微信号
-    pname: string
+    pname: string,
+
+    qrcode:string,
+
+    businessCode:String
+
 }
 
 
@@ -49,7 +54,11 @@ export default (app: Application) => {
         // 公众号的原始ID
         originId: { type: String },
         // 平台微信号
-        pname: { type: String }
+        pname: { type: String },
+        // 平台二维码
+        qrcode: { type: String, required: true },
+        // 业务代码, 可跳转至公众号
+        businessCode: { type: String }
     });
 
     schema.plugin(populate);

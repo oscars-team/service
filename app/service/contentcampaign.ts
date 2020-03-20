@@ -3,6 +3,8 @@ import { Service, Context } from '../component/service';
 import { IContentCampaignEntity, IContentCampaignDocument } from '../model/ContentCampaign'
 
 export class ContentCampaignQuery extends Query implements IContentCampaignEntity {
+    requireAuth: boolean;
+    id?: any;
     content: string;
     description: string;
     depth: number;
@@ -44,5 +46,5 @@ export default class ContentCampaignService extends Service<IContentCampaignDocu
     constructor(ctx: Context) {
         super(ctx, ctx.model.Contentcampaign)
     }
-    
+
 }

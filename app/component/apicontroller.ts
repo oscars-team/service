@@ -54,7 +54,8 @@ export default class ApiController<D extends Document, E extends IEntity, S exte
         const { Service, ctx, logger } = this;
         const { params } = ctx;
         try {
-            ctx.success(await Service.get(params.id));
+            let model = await Service.get(params.id);
+            ctx.success(model.toJSON({ virtuals: true }));
         } catch (err) {
             logger.error(err);
             err = (typeof err === 'string') ? err : JSON.stringify(err);
@@ -73,8 +74,8 @@ export default class ApiController<D extends Document, E extends IEntity, S exte
         const { Service, ctx, logger } = this;
         const { request } = ctx;
         try {
-            await Service.insert(request.body as E)
-            ctx.success();
+            let res = await Service.insert(request.body as E)
+            ctx.success(res.toJSON({ virtuals: true }));
         }
         catch (err) {
             logger.error(err);

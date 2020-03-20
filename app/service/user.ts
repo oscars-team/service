@@ -1,116 +1,59 @@
-import { Service } from 'egg';
-import { Query } from '../component/query';
-import { Types } from 'mongoose';
-const { ObjectId } = Types;
-export class UserQuery extends Query {
 
-    name: string
-    email: string
-    phone: string
-    country: string
-    province: string
-    city: string
-    create_at: Date
+import { Query } from '../component/query';
+import { Service, Context } from '../component/service';
+import { IUserEntity, IUserDocument } from '../model/user'
+
+export class UserQuery extends Query implements IUserEntity {
+    name: string;
+    real_name?: string | undefined;
+    password: string;
+    salt: string;
+    email: string;
+    mobile: string;
+    avatar: string;
+    unionid: string;
+    role: any;
+    pers: any[];
+    id?: any;
+    title?: string | undefined;
+    order?: number | undefined;
+    extra?: any;
+    create_at?: Date | undefined;
+    update_at?: Date | undefined;
+    state?: number | undefined;
+
+
+
 
     /**
      * 导出查询语句
      */
-    public toQuery(): object {
-        let val: any = {};
-        if (this.name) {
-            val['$or'] = [{
-                loginname: { $regex: this.name }
-            }, {
-                displayname: { $regex: this.name }
-            }]
-        }
-
-        if (this.email) {
-            val.email = { $regex: this.email }
-        }
-
-        if (this.phone) {
-            val.phone = { $regex: this.phone }
-        }
-
-        if (this.country) {
-            val.country = { $regex: this.country }
-        }
-
-        if (this.city) {
-            val.city = { $regex: this.city }
-        }
-
-        if (this.province) {
-            val.province = { $regex: this.province }
-        }
-
-        return val;
-    }
+    // toQuery(): any {
+    //     let val: any = {};
+    //     // this.state ? Object.assign(val, { state: this.state }) : void (0)
+    //     // this.use_at ? Object.assign(val, { use_at: { $gt: this.use_at } }) : void (0)
+    //     return val;
+    // }
 
     /**
      * 将客户端脚本转换为对象
      * @param json 客户端传来的参数
      */
-    public static extend(json: any): UserQuery {
+    static extend(json: any): UserQuery {
         let q = new UserQuery();
         return Object.assign(q, json);
     }
 }
 
-/**
- * Test Service
- */
-export default class User extends Service {
-
-    /**
-     * 
-     * @param name - your name
-     */
-    async createUser({ loginname, displayname, password, email, phone, avatar, country, province, city }: any) {
-        const { ctx } = this;
-        let user = new ctx.model.User({ loginname, displayname, email, phone, avatar, country, province, city });
-        user.enPassword(password);
-        return await ctx.model.User.create(user);
+export default class UserService extends Service<IUserDocument, IUserEntity> {
+    constructor(ctx: Context) {
+        super(ctx, ctx.model.User)
     }
 
     /**
-     * 从数据库中获取分页数据，没有经过处理
-     * @param param0 
+     * 获取用户的菜单
+     * @param id 用户ID
      */
-    async getPagedData(query: UserQuery) {
-        const { ctx } = this;
-        const { current, pageSize } = query;
-        const skip = (current - 1) * pageSize;
-        const limit = pageSize * 1;
-        const total = await ctx.model.User.find(query.toQuery()).count();
-        const list = await ctx.model.User.find(query.toQuery()).skip(skip).limit(limit).sort(query.sortOf());
-        return { total, list }
-    }
-
-    async getAdminList(query) {
-        const { total, list } = await this.getPagedData(UserQuery.extend(query));
-        const map = list.map(e => {
-            return {
-                _id: e._id,
-                name: e.name,
-                avatar_url: e.avatar_url,
-                email: e.email,
-                phone: e.phone,
-                country: e.country,
-                province: e.province,
-                create_at: this.ctx.helper.format(e.create_at)
-            }
-        });
-
-        return { total, map };
-    }
-
-
-    async delete(id: string) {
-        await this.ctx.model.User.deleteOne({ _id: ObjectId(id) });
-    }
-
     async getMenus(id: string) {
         let user = await this.ctx.model.User.findById(id);
         let userModules = user.permissions.map(m => m.moduleId);
@@ -128,9 +71,8 @@ export default class User extends Service {
         });
         return this.ctx.helper.treeSet(modules.filter(p => p != undefined), 'id', 'parent');
     }
+
 }
-
-
 
 export interface MenuData {
     id: string,
@@ -139,3 +81,6 @@ export interface MenuData {
     icon: string
     children: MenuData[]
 }
+
+
+

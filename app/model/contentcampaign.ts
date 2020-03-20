@@ -1,6 +1,7 @@
 import { Application, MongooseSingleton } from 'egg';
 import * as populate from 'mongoose-autopopulate'
 import { Document, Schema, IEntity } from "../component/schema";
+import { IWechatPlatformEntity } from './wxplatform';
 
 export interface IContentCampaignEntity extends IEntity {
     content: string
@@ -9,7 +10,7 @@ export interface IContentCampaignEntity extends IEntity {
     // 转发深度
     depth: number,
     // 引导关注的微信平台
-    platform: string
+    platform: IWechatPlatformEntity | string
     // 以下属性为规则
     // 是否强制关注
     isForce: boolean,
@@ -23,6 +24,8 @@ export interface IContentCampaignEntity extends IEntity {
     chance: number,
     // 浏览器限制, [ 'desktop', 'mobile' ]
     browsers: string[]
+    // 是否必须是认证用户
+    requireAuth: boolean
     // 是否为默认策略
     isDefault: boolean
 }
@@ -44,7 +47,7 @@ export default (app: Application) => {
         // 转发深度
         depth: Number,
         // 引导关注的微信平台
-        platform: { type: mongoose.Schema.Types.ObjectId, }, // ref: 'WxPlatform', autopopulate: true
+        platform: { type: mongoose.Schema.Types.ObjectId, ref: 'WechatPlatform', autopopulate: true },
         // 以下属性为规则
         // 是否强制关注
         isForce: Boolean,
@@ -54,6 +57,8 @@ export default (app: Application) => {
         partialPages: Number,
         // 能否跳过
         canSkip: Boolean,
+        // 是否必须认证用户
+        requireAuth: Boolean,
         // 强制关注几率
         chance: Number,
         // 虚拟文章配置参数
@@ -67,6 +72,11 @@ export default (app: Application) => {
         // 是否为默认策略
         isDefault: { type: Boolean, default: false },
     });
+
+    schema.virtual('chanceValue')
+        .get(function (this: IContentCampaignDocument) {
+            return this.chance > Math.random() * 100
+        })
 
     schema.plugin(populate);
     return conn.model('ContentCampaign', schema);

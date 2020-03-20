@@ -1,12 +1,6 @@
 import { Controller } from 'egg';
-
+import utility = require('utility');
 export default class HomeController extends Controller {
-  public async index() {
-    const { ctx } = this;
-    ctx.render('App.jsx', {
-      context: {
-        user: ctx.sess
-      }
-    })
+  async index() {
   }
 }
